@@ -1,6 +1,9 @@
 package ru.bmstu.naburnm8.rpo.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "countries")
@@ -18,5 +21,9 @@ public class Country {
 
     @Column(name = "name", nullable = false, unique = true)
     public String name;
+
+    @OneToMany(mappedBy = "country")
+    @JsonIgnore
+    public List<Artist> artists;
 
 }

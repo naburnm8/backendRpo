@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.bmstu.naburnm8.rpo.backend.models.Artist;
 import ru.bmstu.naburnm8.rpo.backend.models.Country;
 import ru.bmstu.naburnm8.rpo.backend.repositories.CountryRepository;
 
@@ -54,5 +55,14 @@ public class CountryController {
         }
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found");
         return ResponseEntity.ok(country.get());
+    }
+
+    @GetMapping("/{id}/artists")
+    public ResponseEntity<List<Artist>> getArtistsByCountry(@PathVariable long id) {
+        Optional<Country> country = countryRepository.findById(id);
+        if (country.isPresent()) {
+            return ResponseEntity.ok(country.get().artists);
+        }
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found");
     }
 }
