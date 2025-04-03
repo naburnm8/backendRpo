@@ -14,9 +14,11 @@ public class Painting {
     private int year;
 
     @ManyToOne
+    @JoinColumn(name = "artistid")
     private Artist artist;
 
     @OneToOne
+    @JoinColumn(name = "museumid")
     private Museum museum;
 
     public int getId() {

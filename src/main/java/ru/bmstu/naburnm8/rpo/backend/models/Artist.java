@@ -13,6 +13,7 @@ public class Artist {
     private String name;
 
     @ManyToOne
+    @JoinColumn(name = "countryid")
     private Country country;
 
     private String age;
