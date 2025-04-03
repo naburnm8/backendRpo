@@ -8,9 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.bmstu.naburnm8.rpo.backend.models.Country;
 import ru.bmstu.naburnm8.rpo.backend.repositories.CountryRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,7 +36,6 @@ public class CountryController {
     public ResponseEntity<Country> updateCountry(@RequestBody Country country, @PathVariable long id) {
         Country countryObject;
         Optional<Country> cc = countryRepository.findById(id);
-        System.out.println(cc.isPresent());
         if (cc.isPresent()) {
             countryObject = cc.get();
             countryObject.name = country.name;
@@ -50,15 +47,12 @@ public class CountryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCountry(@PathVariable Long id) {
+    public ResponseEntity<Country> deleteCountry(@PathVariable Long id) {
         Optional<Country> country = countryRepository.findById(id);
-        Map<String, Boolean> resp = new HashMap<>();
         if (country.isPresent()) {
             countryRepository.delete(country.get());
-            resp.put("deleted", Boolean.TRUE);
         }
-        else
-            resp.put("deleted", Boolean.FALSE);
-        return ResponseEntity.ok(resp);
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found");
+        return ResponseEntity.ok(country.get());
     }
 }

@@ -9,6 +9,10 @@ public class Painting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String name;
+
+    private int year;
+
     @ManyToOne
     private Artist artist;
 
@@ -37,5 +41,21 @@ public class Painting {
 
     public void setMuseum(Museum museum) {
         this.museum = museum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }
