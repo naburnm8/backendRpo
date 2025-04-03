@@ -24,6 +24,7 @@ public class User {
 
     @JsonIgnore
     private String salt;
+    @JsonIgnore
     private String token;
     private LocalDateTime activity;
 
