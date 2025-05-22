@@ -1,10 +1,14 @@
 package ru.bmstu.naburnm8.rpo.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.bmstu.naburnm8.rpo.backend.models.Country;
 import ru.bmstu.naburnm8.rpo.backend.models.Museum;
 import ru.bmstu.naburnm8.rpo.backend.repositories.MuseumRepository;
 
@@ -17,14 +21,28 @@ public class MuseumController {
     @Autowired
     private MuseumRepository museumRepository;
 
-    @GetMapping
-    public List<Museum> getAllMuseums() {
-        return museumRepository.findAll();
+    //@GetMapping
+    //public List<Museum> getAllMuseums() {
+        //return museumRepository.findAll();
+    //}
+
+    @GetMapping()
+    public Page<Museum> getAllMuseums(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+        return museumRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
     }
 
     @PostMapping
     public ResponseEntity<Museum> createMuseum(@RequestBody Museum museum) {
         try{
+            if (museum.getId() == -1) {
+                Museum saveable = new Museum();
+                saveable.setName(museum.getName());
+                saveable.setLocation( museum.getLocation());
+                saveable.setPaintings(museum.getPaintings());
+                saveable.setUsers(museum.getUsers());
+                museumRepository.saveAndFlush(saveable);
+                return new ResponseEntity<>(saveable, HttpStatus.OK);
+            }
             Museum createdMuseum = museumRepository.save(museum);
             return new ResponseEntity<>(createdMuseum, HttpStatus.OK);
         } catch (Exception e) {
@@ -54,5 +72,15 @@ public class MuseumController {
             museumRepository.delete(optionalMuseum.get());
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Museum not found");
         return ResponseEntity.ok(optionalMuseum.get());
+    }
+    @PostMapping("/deletemuseums")
+    public ResponseEntity<Museum> delete(@RequestBody List<Museum> museums) {
+        try {
+            museumRepository.deleteAll(museums);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseEntity.ok(museums.get(0));
     }
 }

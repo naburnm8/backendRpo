@@ -1,10 +1,14 @@
 package ru.bmstu.naburnm8.rpo.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.bmstu.naburnm8.rpo.backend.models.Country;
 import ru.bmstu.naburnm8.rpo.backend.models.Museum;
 import ru.bmstu.naburnm8.rpo.backend.models.User;
 import ru.bmstu.naburnm8.rpo.backend.repositories.MuseumRepository;
@@ -13,6 +17,7 @@ import ru.bmstu.naburnm8.rpo.backend.repositories.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/users")
@@ -23,9 +28,14 @@ public class UserController {
     @Autowired
     private MuseumRepository museumRepository;
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    //@GetMapping
+    //public List<User> getAllUsers() {
+        //return userRepository.findAll();
+    //}
+
+    @GetMapping()
+    public Page<User> getAllUsers(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+        return userRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "login")));
     }
 
     @PostMapping
@@ -93,5 +103,16 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+    }
+
+    @PostMapping("/deleteusers")
+    public ResponseEntity<User> delete(@RequestBody List<User> users) {
+        try {
+            userRepository.deleteAll(users);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseEntity.ok(users.get(0));
     }
 }

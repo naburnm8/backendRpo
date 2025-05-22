@@ -40,7 +40,7 @@ apiClient.interceptors.response.use(undefined,
 class BackendService {
 
     login(login, password) {
-        return apiClient.post(`${AUTH_URL}/login`, {login, password})
+        return axios.post(`${AUTH_URL}/login`, {login, password})
     }
 
     logout() {
@@ -48,7 +48,8 @@ class BackendService {
     }
 
     retrieveAllCountries(page, limit) {
-        return apiClient.get(`${API_URL}/countries`);
+        console.log(page)
+        return apiClient.get(`${API_URL}/countries?page=${page}&limit=${limit}`);
     }
     retrieveCountry(id) {
         return apiClient.get(`${API_URL}/countries/${id}`);
@@ -64,6 +65,89 @@ class BackendService {
 
     deleteCountries(countries) {
         return apiClient.post(`${API_URL}/countries/deletecountries`, countries);
+    }
+
+    retrieveAllArtists(page, limit) {
+        return apiClient.get(`${API_URL}/artists?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    retrieveArtist(id) {
+        return apiClient.get(`${API_URL}/artists/${id}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    createArtist(artist) {
+        return apiClient.post(`${API_URL}/artists`, artist, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    updateArtist(artist) {
+        return apiClient.put(`${API_URL}/artists/${artist.id}`, artist, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    deleteArtists(artists) {
+        return apiClient.post(`${API_URL}/artists/deleteartists`, artists, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    // Таблица "Музеи"
+    retrieveAllMuseums(page, limit) {
+        return apiClient.get(`${API_URL}/museums?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    retrieveMuseum(id) {
+        return apiClient.get(`${API_URL}/museums/${id}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    createMuseum(museum) {
+        return apiClient.post(`${API_URL}/museums`, museum, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    updateMuseum(museum) {
+        return apiClient.put(`${API_URL}/museums/${museum.id}`, museum, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    deleteMuseums(museums) {
+        return apiClient.post(`${API_URL}/museums/deletemuseums`, museums, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    // Таблица "Paintings"
+    retrieveAllPaintings(page, limit) {
+        return apiClient.get(`${API_URL}/paintings?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    retrievePainting(id) {
+        return apiClient.get(`${API_URL}/paintings/${id}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    createPainting(painting) {
+        return apiClient.post(`${API_URL}/paintings`, painting, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    updatePainting(painting) {
+        return apiClient.put(`${API_URL}/paintings/${painting.id}`, painting, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    deletePaintings(painting) {
+        return apiClient.post(`${API_URL}/paintings/deletepaintings`, painting, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    // Таблица "Users"
+    retrieveAllUsers(page, limit) {
+        return apiClient.get(`${API_URL}/users?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    retrieveUser(id) {
+        return apiClient.get(`${API_URL}/users/${id}`, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    createUser(user) {
+        return apiClient.post(`${API_URL}/users`, user, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    updateUser(user) {
+        return apiClient.put(`${API_URL}/users/${user.id}`, user, { headers : {Authorization : Utils.getToken()}});
+    }
+
+    deleteUsers(user) {
+        return apiClient.post(`${API_URL}/users/deleteusers`, user, { headers : {Authorization : Utils.getToken()}});
     }
 
 }
