@@ -11,7 +11,7 @@ import ru.bmstu.naburnm8.rpo.backend.repositories.ArtistRepository;
 
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/artists")
 public class ArtistController {

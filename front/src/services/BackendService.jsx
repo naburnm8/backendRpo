@@ -47,6 +47,25 @@ class BackendService {
         return axios.get(`${AUTH_URL}/logout`, { headers : {Authorization : Utils.getToken()}})
     }
 
+    retrieveAllCountries(page, limit) {
+        return apiClient.get(`${API_URL}/countries`);
+    }
+    retrieveCountry(id) {
+        return apiClient.get(`${API_URL}/countries/${id}`);
+    }
+
+    createCountry(country) {
+        return apiClient.post(`${API_URL}/countries`, country);
+    }
+
+    updateCountry(country) {
+        return apiClient.put(`${API_URL}/countries/${country.id}`, country);
+    }
+
+    deleteCountries(countries) {
+        return apiClient.post(`${API_URL}/countries/deletecountries`, countries);
+    }
+
 }
 
 export default new BackendService()

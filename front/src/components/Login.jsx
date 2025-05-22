@@ -53,8 +53,7 @@ export default connect()( function Login() {
 
     return  (
         <div className="col-md-6 me-0">
-            {error_message &&
-                <div className="alert alert-danger mt-1 me-0 ms-0">{error_message}</div>}
+
             <h2>Вход</h2>
             <form name="form" onSubmit={handleSubmit}>
                 <div className="form-group">
