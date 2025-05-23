@@ -47,7 +47,7 @@ class BackendService {
         return axios.get(`${AUTH_URL}/logout`, { headers : {Authorization : Utils.getToken()}})
     }
 
-    retrieveAllCountries(page, limit) {
+    retrieveAllCountries(page = 0, limit) {
         console.log(page)
         return apiClient.get(`${API_URL}/countries?page=${page}&limit=${limit}`);
     }
@@ -67,7 +67,7 @@ class BackendService {
         return apiClient.post(`${API_URL}/countries/deletecountries`, countries);
     }
 
-    retrieveAllArtists(page, limit) {
+    retrieveAllArtists(page = 0, limit) {
         return apiClient.get(`${API_URL}/artists?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
     }
 
@@ -88,7 +88,7 @@ class BackendService {
     }
 
     // Таблица "Музеи"
-    retrieveAllMuseums(page, limit) {
+    retrieveAllMuseums(page = 0, limit) {
         return apiClient.get(`${API_URL}/museums?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
     }
 
@@ -109,7 +109,7 @@ class BackendService {
     }
 
     // Таблица "Paintings"
-    retrieveAllPaintings(page, limit) {
+    retrieveAllPaintings(page = 0, limit) {
         return apiClient.get(`${API_URL}/paintings?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
     }
 
@@ -130,7 +130,7 @@ class BackendService {
     }
 
     // Таблица "Users"
-    retrieveAllUsers(page, limit) {
+    retrieveAllUsers(page = 0, limit) {
         return apiClient.get(`${API_URL}/users?page=${page}&limit=${limit}`, { headers : {Authorization : Utils.getToken()}});
     }
 

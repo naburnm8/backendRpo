@@ -6,16 +6,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ru.bmstu.naburnm8.rpo.backend.models.Country;
 import ru.bmstu.naburnm8.rpo.backend.models.Museum;
 import ru.bmstu.naburnm8.rpo.backend.models.User;
 import ru.bmstu.naburnm8.rpo.backend.repositories.MuseumRepository;
 import ru.bmstu.naburnm8.rpo.backend.repositories.UserRepository;
+import ru.bmstu.naburnm8.rpo.backend.tools.DataValidationException;
+import ru.bmstu.naburnm8.rpo.backend.tools.Utils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -33,6 +36,15 @@ public class UserController {
         //return userRepository.findAll();
     //}
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable int id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping()
     public Page<User> getAllUsers(@RequestParam("page") int page, @RequestParam("limit") int limit) {
         return userRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "login")));
@@ -49,17 +61,27 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User user) {
-        User userObj;
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            userObj = optionalUser.get();
-            userObj.setLogin(user.getLogin());
-            userObj.setEmail(user.getEmail());
-            userRepository.save(userObj);
-            return ResponseEntity.ok(userObj);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User userDetails) throws DataValidationException {
+        try {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new DataValidationException(" Пользователь с таким индексом не найден"));
+            user.setEmail(userDetails.getEmail());
+            String np = userDetails.getNp();
+            if (np != null  && !np.isEmpty()) {
+                byte[] b = new byte[32];
+                new Random().nextBytes(b);
+                String salt = new String(Hex.encode(b));
+                user.setPassword(Utils.computeHash(np, salt));
+                user.setSalt(salt);
+            }
+            userRepository.save(user);
+            return ResponseEntity.ok(user);
+        }
+        catch (Exception ex) {
+            if (ex.getMessage().contains("users.email_UNIQUE"))
+                throw new DataValidationException("Пользователь с такой почтой уже есть в базе");
+            else
+                throw new DataValidationException("Неизвестная ошибка");
         }
     }
 

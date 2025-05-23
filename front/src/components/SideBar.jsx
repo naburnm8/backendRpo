@@ -59,7 +59,17 @@ const SideBar = props => {
                     <Nav.Link as={Link} to="/users"><FontAwesomeIcon icon={faUser}/>{' '}Users</Nav.Link>
                 </Nav.Item>
             }
+            {props.expanded &&
+                <Nav.Item>
+                    <Nav.Link as={Link} to="/my_account"><FontAwesomeIcon icon={faUser}/>{' '}Account</Nav.Link>
+                </Nav.Item>
+            }
 
+            {!props.expanded &&
+                <Nav.Item>
+                    <Nav.Link as={Link} to="/my_account"><FontAwesomeIcon icon={faUser} size="2x"/></Nav.Link>
+                </Nav.Item>
+            }
         </Nav>
     )
 }

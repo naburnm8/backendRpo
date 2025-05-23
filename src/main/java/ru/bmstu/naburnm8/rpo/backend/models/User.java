@@ -26,6 +26,9 @@ public class User {
     private String salt;
     @JsonIgnore
     private String token;
+
+    @Transient
+    private String np;
     private LocalDateTime activity;
 
     @ManyToMany(mappedBy = "users")
@@ -115,5 +118,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public String getNp() {
+        return np;
+    }
+
+    public void setNp(String np) {
+        this.np = np;
     }
 }
